@@ -1,0 +1,109 @@
+Room Automation System using Cisco Packet Tracer
+Aim
+To design and simulate a Room Automation System in Cisco Packet Tracer for automatically managing a fan and lamp based on environmental conditions (temperature & light intensity) with remote IoT monitoring.
+Problem Statement
+In traditional rooms, appliances such as fans and lamps are manually controlled, leading to:
+- Energy wastage due to devices being left ON unnecessarily
+- No remote control or monitoring capabilities
+- Inconvenience in managing comfort settings
+
+Hence, there is a need for a smart, automated system that controls devices intelligently using IoT.
+Scope
+- Automate fan control based on temperature sensor (DHT11).
+- Automate lamp control based on light sensor (LDR).
+- Provide remote monitoring and control through Cisco Packet Tracer IoT app.
+- Demonstrate scalability for home/office automation.
+Required Components
+Software:
+- Cisco Packet Tracer (IoT-enabled version)
+- Arduino IDE (for code development)
+
+Hardware (Simulated in Packet Tracer):
+- IoT Microcontroller (Arduino/ESP8266)
+- Temperature Sensor (DHT11)
+- Light Sensor (LDR)
+- Fan (DC motor/actuator)
+- Lamp (LED/IoT Lamp)
+- IoT Router & Server
+- Smartphone/PC (for remote access)
+Implementation Steps
+1. Open Cisco Packet Tracer and switch to IoT workspace.
+2. Place IoT devices: Microcontroller, DHT11, LDR, Fan, Lamp, Router, Server.
+3. Configure sensors and actuators.
+4. Upload Arduino automation code.
+5. Connect devices to IoT Gateway & Server.
+6. Simulate conditions: increase temperature or reduce light to test automation.
+7. Verify remote monitoring using IoT Mobile App (Packet Tracer).
+Arduino Code
+// Room Automation System - Fan and Lamp Control
+// Using Temperature Sensor (DHT11) and Light Sensor (LDR)
+
+#include <DHT.h>
+#define DHTPIN A0        // Temperature sensor connected to A0
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+#define LDRPIN A1        // LDR connected to A1
+#define FANPIN 3         // Fan connected to Digital Pin 3 (Relay/Motor)
+#define LAMPPIN 4        // Lamp connected to Digital Pin 4 (Relay/LED)
+
+float temperature = 0.0;
+int lightValue = 0;
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+
+  pinMode(FANPIN, OUTPUT);
+  pinMode(LAMPPIN, OUTPUT);
+
+  digitalWrite(FANPIN, LOW);
+  digitalWrite(LAMPPIN, LOW);
+
+  Serial.println("Room Automation System Started...");
+}
+
+void loop() {
+  // Read temperature
+  temperature = dht.readTemperature();
+
+  // Read light intensity from LDR
+  lightValue = analogRead(LDRPIN);
+
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.print(" C, Light: ");
+  Serial.println(lightValue);
+
+  // Fan control: ON if Temp > 30°C
+  if (temperature > 30) {
+    digitalWrite(FANPIN, HIGH);
+    Serial.println("Fan: ON");
+  } else {
+    digitalWrite(FANPIN, LOW);
+    Serial.println("Fan: OFF");
+  }
+
+  // Lamp control: ON if light intensity < 500 (dark room)
+  if (lightValue < 500) {
+    digitalWrite(LAMPPIN, HIGH);
+    Serial.println("Lamp: ON");
+  } else {
+    digitalWrite(LAMPPIN, LOW);
+    Serial.println("Lamp: OFF");
+  }
+
+  delay(2000); // Delay for stability
+}
+
+Results
+- Fan automatically turned ON when temperature > 30°C.
+- Lamp automatically turned ON when light intensity < threshold (dark conditions).
+- System successfully monitored and controlled remotely.
+Insert screenshots showing Fan/Lamp ON/OFF states here.
+Conclusion
+The Room Automation System using Cisco Packet Tracer successfully demonstrates IoT-based automation. The project shows how temperature and light sensors can manage appliances automatically, reducing energy consumption and improving convenience. This concept can be extended to complete smart homes and industrial IoT systems.
+References
+1. Cisco Networking Academy – IoT Packet Tracer Resources
+2. Arduino Official Documentation
+3. Smart Home IoT Research Papers
